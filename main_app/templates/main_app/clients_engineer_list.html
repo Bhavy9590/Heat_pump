@@ -1,0 +1,133 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    {% if messages %}
+    <div class="alert-container position-fixed top-10 start-50 translate-middle-x p-3" style="z-index: 1055; max-width: 600px;">
+        {% for message in messages %}
+            
+            <div class="alert alert-{{message.tags}} alert-dismissible fade show shadow rounded auto-hide" role="alert">
+                <div class="d-flex align-items-center">
+                    {% if 'success' in message.tags %}
+                        <i class="bx bx-check-circle me-2 text-success"></i>
+                    {% elif 'error' in message.tags %}
+                        <i class="bx bx-error-circle me-2 text-danger"></i>
+                    {% elif 'warning' in message.tags %}
+                        <i class="bx bx-error me-2 text-warning"></i>
+                    {% else %}
+                        <i class="bx bx-info-circle me-2 text-info"></i>
+                    {% endif %}
+                    <span>{{ message }}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+    <!-- Basic Bootstrap Table -->
+    <!-- Striped Rows -->
+    <div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-header"><strong>Engineer Panel</strong></h5>
+        <div>
+            <a href="{% url 'add_user_engineer' %}" class="btn btn-primary" style="margin-right:10px;"><i class="mdi mdi-plus mdi-24px me-1 icon-animate-plus"></i>Add Engineer</a>
+        </div>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-striped">
+        <thead>
+            <tr>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Emaiil</th>
+            <th>Status</th>
+            <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody class="table-border-bottom-0">
+            {% for single_engineer in engineer_list %}
+                <tr>
+                <td><i class="bx bx-user bx-md me-4"></i> <span>{{single_engineer.username}}</span></td>
+                <td>{{single_engineer.first_name}} {{single_engineer.last_name}}</td>
+                <td>{{single_engineer.email}}</td>
+                {% if single_engineer.is_active %}
+                    <td><span class="badge bg-label-primary me-1">Active</span></td>
+                {% else %}
+                    <td><span class="badge bg-label-danger me-1">InActive</span></td>
+                {% endif %}
+                <td>
+                    <div class="dropdown">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'edit_user_engineer' single_engineer.id %}"
+                        
+                        ><i class="bx bx-edit-alt me-1"></i> Edit</a
+                        >
+                        <a class="dropdown-item" href="{% url 'delete_user_engineer' single_engineer.id %}"
+                        onclick="return confirm('Are you sure you want to delete this Engineer ? ({{single_engineer.username}})');"
+                        ><i class="bx bx-trash me-1"></i> Delete</a
+                        >
+                    </div>
+                    </div>
+                </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+        <!-- Styled Pagination Controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if engineer_list.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ engineer_list.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in engineer_list.paginator.page_range %}
+                    {% if engineer_list.number == num %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if engineer_list.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ engineer_list.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ engineer_list.paginator.num_pages }}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    </div>
+    <!--/ Striped Rows -->
+    <!--/ Responsive Table -->
+</div>
+{% endblock content %}
+<!-- / Content -->

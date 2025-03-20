@@ -1,0 +1,75 @@
+{% extends 'layouts/base.html' %} {% load static %} {% load custom_filters %} {%block breadcrumbs %}{% endblock breadcrumbs %} {% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+  <!-- Basic Layout & Basic with Icons -->
+  <div class="row">
+    <!-- Basic Layout -->
+    <div class="col-xxl">
+      <div class="card mb-6">
+        <div
+          class="card-header d-flex align-items-center justify-content-between"
+        >
+          <h5 class="mb-0">Edit Temprature</h5>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'edit_temprature' user_id %}" method="post">
+            {% csrf_token %}
+
+            <!-- Temprature Field -->
+            <div class="row mb-6">
+              <label class="col-sm-2 col-form-label" for="Temperature"
+                >Min Temperature</label
+              >
+              <div class="col-sm-3">
+                <div class="input-group input-group-merge">
+                  <span id="temp-icon" class="input-group-text">
+                    <i class="bx bxs-thermometer"></i>
+                  </span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="temp-icon"
+                    name="current_value"
+                    value = "{{current_temperature}}"
+                    placeholder="Set a Temprature"
+                    autofocus
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row mb-6">
+              <label class="col-sm-2 col-form-label" for="Temperature"
+                >Max Temperature</label
+              >
+              <div class="col-sm-3">
+                <div class="input-group input-group-merge">
+                  <span id="temp-icon" class="input-group-text">
+                    <i class="bx bxs-thermometer"></i>
+                  </span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="temp-icon"
+                    name="max_temperature"
+                    value = "{{max_temperature}}"
+                    placeholder="Set a Temprature"
+                    autofocus
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="row justify-content-end">
+              <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">
+                  <i class="mdi mdi-pencil mdi-24px me-1 icon-animate-plus"></i
+                  >Update Temprature
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

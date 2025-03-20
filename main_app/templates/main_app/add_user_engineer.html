@@ -1,0 +1,125 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Basic Layout & Basic with Icons -->
+    <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+            <div class="card mb-6">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">Basic Layout</h5>
+                <small class="text-muted float-end">Default label</small>
+            </div>
+                <div class="card-body">
+                    <form action="{% url 'add_user_admin' %}" method="post">
+                        {% csrf_token %}
+                        <!-- Username Field -->
+                        <div class="row mb-6">
+                            <label class="col-sm-2 col-form-label" for="username">Username</label>
+                            <div class="col-sm-10">
+                                <div class="input-group input-group-merge">
+                                    <span id="username-icon" class="input-group-text">
+                                        <i class="bx bx-user"></i>
+                                    </span>
+                                    {{ form.username|add_class:"form-control" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Firstname Field -->
+                        <div class="row mb-6">
+                            <label class="col-sm-2 col-form-label" for="first_name">First Name</label>
+                            <div class="col-sm-10">
+                                <div class="input-group input-group-merge">
+                                    <span id="firstname-icon" class="input-group-text">
+                                        <i class="bx bxs-user-detail"></i>
+                                    </span>
+                                    {{ form.first_name|add_class:"form-control" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lastname Field -->
+                        <div class="row mb-6">
+                            <label class="col-sm-2 col-form-label" for="last_name">Last Name</label>
+                            <div class="col-sm-10">
+                                <div class="input-group input-group-merge">
+                                    <span id="lastname-icon" class="input-group-text">
+                                        <i class="bx bxs-user-detail"></i>
+                                    </span>
+                                    {{ form.last_name|add_class:"form-control" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="row mb-6">
+                            <label class="col-sm-2 col-form-label" for="email">Email</label>
+                            <div class="col-sm-10">
+                                <div class="input-group input-group-merge">
+                                    <span id="email-icon" class="input-group-text">
+                                        <i class="bx bx-envelope"></i>
+                                    </span>
+                                    {{ form.email|add_class:"form-control" }}
+                                </div>
+                                <div class="form-text">You can use letters, numbers & periods</div>
+                            </div>
+                        </div>
+
+                        <!-- Role Field -->
+                        <div class="row mb-6">
+                            <label class="col-sm-2 col-form-label" for="role">Role</label>
+                            <div class="col-sm-10">
+                                <div class="input-group input-group-merge">
+                                    <span id="role-icon" class="input-group-text">
+                                        <i class="bx bx-user-check"></i>
+                                    </span>
+                                    {{ form.role|add_class:"form-control" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Manager Field -->
+                        <div class="row mb-6">
+                            <label class="col-sm-2 col-form-label" for="manager">Manager</label>
+                            <div class="col-sm-10">
+                                <div class="input-group input-group-merge">
+                                    <span id="manager-icon" class="input-group-text">
+                                        <i class="bx bx-user-circle"></i>
+                                    </span>
+                                    {{ form.manager|add_class:"form-control" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="row mb-6">
+                            <label class="col-sm-2 col-form-label" for="password">Password</label>
+                            <div class="col-sm-10">
+                                <div class="input-group input-group-merge">
+                                    <span id="password-icon" class="input-group-text">
+                                        <i class="bx bx-lock"></i>
+                                    </span>
+                                    {{ form.password|add_class:"form-control" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="row justify-content-end">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Add {{form_type}}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

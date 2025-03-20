@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Base styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0d1117; /* Deep dark background */
+            margin: 0;
+            padding: 0;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 25px;
+            background-color: #161b22; /* Dark container */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Image styling */
+        img {
+            max-width: 20%; /* Reduced size by 40% */
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 10px;
+        }
+
+        /* Header and text styling */
+        h2, h3 {
+            text-align: center;
+            color: #58a6ff; /* Neon blue header text */
+        }
+
+        p {
+            color: #b9b9b9; /* Subtle futuristic text color */
+            background-color: #1f2a3a; /* Soft, subtle background for paragraphs */
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #39444d;
+            margin-bottom: 20px;
+        }
+
+        p.marked {
+            background-color: #ec4899; /* Neon pink for emphasis */
+            color: #ffffff;
+            padding: 8px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #21262d; /* Dark table background */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #39444d;
+            color: #b9b9b9;
+            border-left: 1px solid #39444d;
+        }
+
+        td:first-child {
+            border-left: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .align-left {
+            text-align: left;
+            font-weight: bold;
+            color: #79c0ff; /* Light neon blue */
+        }
+
+        .align-right {
+            text-align: right;
+            color: #f0f6fc; /* Bright contrasting text */
+        }
+
+        /* Override email link to plain text */
+        a {
+            color: inherit;
+            text-decoration: none;
+            pointer-events: none;
+        }
+
+        /* Media query for smaller screens */
+        @media only screen and (max-width: 480px) {
+            body, table, td, p, a, li, blockquote {
+                -webkit-text-size-adjust: none !important;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            table {
+                width: 100%;
+            }
+        }
+
+        /* Footer styling */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 15px;
+            background-color: #0d1117;
+            border-top: 1px solid #39444d;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .footer a {
+            color: #58a6ff; /* Neon blue links */
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background-color: #21262d;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+            background-color: #2a3039;
+        }
+
+        h4 {
+            color: #d1d4e3;
+            margin-bottom: 15px;
+        }
+
+        /* Button link styling for App Store and Play Store */
+        .footer a.app-store, .footer a.play-store {
+            color: white;
+            background-color: #58a6ff; /* Neon blue */
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+
+        .footer a.play-store {
+            background-color: #ec4899; /* Neon pink for Play Store */
+        }
+
+        a {
+            color: inherit; /* Inherit color from parent */
+            text-decoration: none; /* No underline */
+            pointer-events: none; /* Disable click */
+            cursor: default; /* Default cursor */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Email Header -->
+        <h2>Account Update - {{app_name}}</h2>
+
+        <!-- Company Logo -->
+        <img src="{{logo_url}}" alt="Company Logo">
+
+        <!-- Account update message -->
+        <p>Your <strong>{{app_name}}</strong> account has been <span class="marked">successfully updated</span>. Please review your account details below.</p>
+        
+        <!-- User details table -->
+        <h3>User Update Details</h3>
+        <table>
+            <tr>
+                <td class="align-left">Profile Image:</td>
+                <td class="align-right">
+                    <img src="{{profile_image_url}}" alt="Profile Image" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                </td>
+            </tr>
+            <tr>
+                <td class="align-left">User Name:</td>
+                <td class="align-right"><a href='#' style='text-decoration: none; pointer-events: none; cursor: default; color:white'>{{username}}</a></td>
+            </tr>
+            <tr>
+                <td class="align-left">First Name:</td>
+                <td class="align-right">{{first_name}}</td>
+            </tr>
+            <tr>
+                <td class="align-left">Last Name:</td>
+                <td class="align-right">{{last_name}}</td>
+            </tr>
+            <tr>
+                <td class="align-left">Email ID:</td>
+                <td class="align-right"><a href='#' style='text-decoration: none; pointer-events: none; cursor: default; color:white'>{{email}}</a></td>
+            </tr>
+            <tr>
+                <td class="align-left">Country:</td>
+                <td class="align-right">{{country}}</td>
+            </tr>
+            <tr>
+                <td class="align-left">Address:</td>
+                <td class="align-right">{{address}}</td>
+            </tr>
+            <tr>
+                <td class="align-left">City:</td>
+                <td class="align-right">{{city}}</td>
+            </tr>
+            <tr>
+                <td class="align-left">State:</td>
+                <td class="align-right">{{state}}</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

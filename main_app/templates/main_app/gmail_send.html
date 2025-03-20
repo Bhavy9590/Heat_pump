@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa; /* Light gray background */
+            color: #333333; /* Dark gray text */
+        }
+
+        .email-wrapper {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff; /* White card background */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            overflow: hidden;
+        }
+
+        .email-header {
+            background-color: #797979; /* Green header */
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .email-header img {
+            max-width: 80px;
+            margin-bottom: 10px;
+        }
+
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .email-body {
+            padding: 20px;
+        }
+
+        .email-body h3 {
+            color: #7e7e7e; /* Match header color */
+            margin-top: 0;
+        }
+
+        .email-body p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .email-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .email-body table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .email-footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f1f1f1;
+            font-size: 12px;
+            color: #777777;
+        }
+
+        .email-footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .email-wrapper {
+                margin: 10px;
+            }
+
+            .email-header h1 {
+                font-size: 20px;
+            }
+
+            .email-body h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-wrapper">
+        <!-- Email Header -->
+        <div class="email-header">
+            <img src="{{ logo_url }}" alt="Company Logo">
+            <h1>Welcome to {{ app_name }}</h1>
+        </div>
+
+        <!-- Email Body -->
+        <div class="email-body">
+            <h3>Hello {{ firstname }} {{ lastname }},</h3>
+            <p>
+                We are excited to welcome you to <strong>{{ app_name }}</strong>. Your {{ create_or_reset }} was
+                <strong>successful</strong>. Below are your registration details:
+            </p>
+
+            <!-- User Details Table -->
+            <table>
+                <tr>
+                    <td><strong>Username:</strong></td>
+                    <td>{{ username }}</td>
+                </tr>
+                <tr>
+                    <td><strong>First Name:</strong></td>
+                    <td>{{ first_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Last Name:</strong></td>
+                    <td>{{ last_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email:</strong></td>
+                    <td>{{ email }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Password:</strong></td>
+                    <td>{{ password }}</td>
+                </tr>
+            </table>
+
+            <p>If you have any questions, feel free to reach out to our support team at <a href="mailto:dptesting10@gmail.com">dptesting10@gmail.com</a>.</p>
+            <p>Thank you for choosing {{ app_name }}!</p>
+        </div>
+
+        <!-- Email Footer -->
+        <div class="email-footer">
+            <p>&copy; {{ current_year }} {{ app_name }}. All rights reserved.</p>
+            <p>
+                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

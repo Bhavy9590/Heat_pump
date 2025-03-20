@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+              <!-- Text alignment -->
+              <div class="container-xxl flex-grow-1 container-p-y">
+              <h5 class="pb-1 mb-6">Admin</h5>
+              <div class="row mb-12 g-6">
+                
+
+                {% if request.user.role == 'SuperAdmin' %}
+                <div class="col-md-6 col-lg-4">
+                  <div class="card text-center card-hover">
+                    <div class="card-body ">
+                      
+                      <h5 class="card-title"><i class="mdi mdi-account-cog mdi-24px me-3 icon-animate"></i>Admins</h5> 
+
+                      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                      <a href="{% url 'clients_admin_list' %}" class="btn btn-primary">Go Admins</a>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+
+                {% if request.user.role == 'SuperAdmin' or request.user.role == 'Admin' %}
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card text-center card-hover">
+                      <div class="card-body ">
+                        <h5 class="card-title"><i class="mdi mdi-account-hard-hat mdi-24px me-3 icon-animate"></i>Engineers</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="{% url 'clients_engineer_list' %}" class="btn btn-primary">Go Engineers</a>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card text-center card-hover">
+                      <div class="card-body ">
+                        <h5 class="card-title"><i class="mdi mdi-account-group mdi-24px me-3 icon-animate"></i>Users</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="{% url 'clients_user_list' %}" class="btn btn-primary">Go Users</a>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              </div>
+              <!--/ Text alignment -->
+
+              {% endblock content %}
+            <!-- / Content -->
+

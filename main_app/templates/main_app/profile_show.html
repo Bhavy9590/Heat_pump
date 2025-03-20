@@ -1,0 +1,96 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+
+        
+        {% if messages %}
+                <div class="alert-container position-fixed top-20 start-60 translate-middle-x p-3" style="z-index: 1055; max-width: 600px;">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow rounded" role="alert">
+                            <div class="d-flex align-items-center">
+                                {% if 'success' in message.tags %}
+                                    <i class="bx bx-check-circle me-2 text-success"></i>
+                                {% elif 'error' in message.tags %}
+                                    <i class="bx bx-error-circle me-2 text-danger"></i>
+                                {% elif 'warning' in message.tags %}
+                                    <i class="bx bx-error me-2 text-warning"></i>
+                                {% else %}
+                                    <i class="bx bx-info-circle me-2 text-info"></i>
+                                {% endif %}
+                                <span>{{ message }}</span>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+    <center>
+
+        <div class="container-xxl flex-grow-1 container-p-y" >
+            
+
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 rounded" style='border:1px solid; box-shadow: 10px 10px 20px rgba(0, 0, 0, 2.0);' >
+                    <div class="card-body">
+                        
+                        
+                        
+                        
+                        <h5 class="card-title">{{request.user.username}} </h5>
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="file" name="profile_image" id="profile_image" hidden>
+                        </form>
+                        {% comment %} <h6 class="card-subtitle">{{request.user.role}}</h6> {% endcomment %}
+                        <div class="button-wrapper">
+                        <label for="upload" class="btn btn-primary position-absolute rounded-circle" tabindex="0" style="width: 40px;height: 40px;top:225;margin-left:65;padding: 0;text-align: center;margin-top: 160px;margin-left: 50px; border:2px"  data-bs-toggle="tooltip " 
+                            data-bs-placement="bottom" 
+                            title="Edit Profile Picture">
+                            <span class="d-none d-sm-block"><i class="mdi mdi-circle-edit-outline"></i></span   >
+                            <i class="bx bx-upload d-block d-sm-none"></i>
+                            <input
+                                type="file"
+                                id="upload"
+                                class="account-file-input"
+                                hidden
+                                accept="image/png, image/jpeg" />
+                        </label>
+                    </div>    
+                    
+                    <img
+                        class="img-fluid d-flex mx-auto my-auto rounded-circle"
+                        src="{% static "assets/img/avatars/1.png" %}"    
+                        style="border:3px solid;"
+                        alt="Card image cap" />
+                        
+                        
+                        <p class="card-text my-2 sm" ><strong>Role : {{request.user.role}}</strong></p>
+                        <p class="card-text my-2 sm" ><strong>Name : {{request.user.first_name}} {{request.user.last_name}}</strong></p>
+                        <p class="card-text sm" ><strong>Email :{{request.user.email}}</strong></p>
+                        
+                        {% if  request.user.role != 'SuperAdmin'%}
+                            <p class="card-text " ><strong>Manager : {{request.user.manager}}</strong></p>
+                            <p class="card-text" ><strong>Joining Date : {{request.user.date_joined|date:'Y-m-d'}}</strong></p>
+                            <p class="card-text my-2" ><strong>Phone Number : {{request.user.phone_number}}</strong></p>
+                            <p class="card-text my-2" ><strong>Address : {{request.user.address}}</strong></p>
+                        {% endif %}
+                        
+                        <div class="row justify-content-center">
+                            <div class="mt-4">
+                                <a href="{% url 'profile_edit' request.user.id %}" class="btn btn-outline-primary rounded-pill px-4 py-2" style="border-width: 2px; font-weight: 500;">
+                                    <i class="mdi mdi-pencil mdi-16px me-2"></i>Edit Profile
+                                </a>
+                            </div>
+                        </div>
+                     
+                </div>
+            </div>
+        </div>
+    </center>
+
+
+{% endblock content%}

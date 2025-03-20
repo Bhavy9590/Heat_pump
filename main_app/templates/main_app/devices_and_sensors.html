@@ -1,0 +1,1299 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block breadcrumbs %}{% endblock breadcrumbs %} {% block content %}
+<!-- Content -->
+
+<!--/ DEVICES DIV ENDS HERE /-->
+<div class="container-sm container-p-y">
+  {% if messages %}
+    {% comment %} <div class="alert-container position-fixed top-10 start-50 translate-middle-x p-3" style="z-index: 1055; max-width: 600px;">{% endcomment %}
+     <div class="alert-container position-fixed top-10 end-0 p-3" style="z-index: 1055; max-width: 600px;">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-lg rounded auto-hide img-shadow" role="alert">
+                <div class="d-flex align-items-center">
+                    {% if 'success' in message.tags %}
+                        <i class="bx bx-check-circle me-2 text-success"></i>
+                    {% elif 'error' in message.tags %}
+                        <i class="bx bx-error-circle me-2 text-danger"></i>
+                    {% elif 'warning' in message.tags %}
+                        <i class="bx bx-error me-2 text-warning"></i>
+                    {% elif 'info' in message.tags %}
+                        <i class="bx bx-check-circle me-2 text-info"></i>
+                    {% else %}
+                        <i class="bx bx-info-circle me-2 text-info"></i>
+                    {% endif %}
+                    <span><strong>{{ message }}</strong></span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+  {% comment %} <div class="row g-6">
+    <h2 class="text-center fw-bold mb-3" style="color: #333; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+      Devices
+    </h2>     
+    <div class="d-flex justify-content-end">
+      <i class="mdi mdi-raspberry-pi mdi-mdi-36px me-2" style="color: #333;" ></i>
+      <span style="color: #333; font-size: 1.2rem;">{{ rasp_id_by_user }}</span>
+      
+    </div> {% endcomment %}
+    
+
+    <div class="row g-6">
+      <h2 class="text-center fw-bold mb-3" style="color: #333; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+        Devices
+      </h2>     
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="dropdown">
+          <button 
+            class="btn btn-info dropdown-toggle shadow-lg text-uppercase" 
+            type="button" 
+            
+            id="dropdownMenuButton" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false" >
+            <span style="color: #01051d; font-size: 1.2rem;">{{ rasp_id_by_user }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+            <li class="liststatus">
+              <button id="statusBtn"  class="dropdown-item shadow-lg d-flex align-items-center" style="color:{% if rasp_active_status %} green {% else %} red{% endif %};">
+                <i class="mdi mdi-raspberry-pi" style=" font-size: 24px;margin-right: 5px;"></i>
+                <strong>Device Status </strong></button>
+            </li>
+            <li class="listreset">
+              <a href="{% url 'reset_default_sensors' user_id %}" class="dropdown-item shadow-lg d-flex align-items-center" id="defaultBtn">
+                <i class="mdi mdi-lock-reset" style="font-size: 24px; margin-right: 5px;"></i>
+                <strong>Reset Default</strong>
+              </a>
+            </li>
+            <li class="listreboot">
+              <a href="{% url 'device_start_stop' user_id 'Reboot' %}"><button id="rebootBtn" class="dropdown-item btn-danger shadow-lg d-flex align-items-center">
+                <i class="bx bx-refresh me-2"></i> <strong>Reboot Device</strong>
+              
+              </button></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+<style>
+  .dropdown-menu {
+    min-width: 150px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+    
+  }
+  
+.listreboot .dropdown-item {
+  background-color: white;
+  color: #333; 
+  border: none; 
+  transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+
+.listreboot .dropdown-item:hover {
+  background-color: red; 
+  color: white;
+  text-shadow: 0 8px 8px rgba(0, 0, 0, 0.9);
+  
+}
+
+.liststatus .dropdown-item:hover {
+  background-color: orange;
+  color: black; 
+  text-shadow: 0 6px 8px rgba(0, 0, 0, 0.9);
+}
+
+
+.listreset .dropdown-item:hover {
+  background-color: green;
+  color: white; 
+  text-shadow: 0 6px 8px rgba(0, 0, 0, 0.9);
+  
+}
+
+.listreset .dropdown-item:hover .mdi-lock-reset {
+  color: white; 
+}
+
+.liststatus .dropdown-item:hover .mdi-raspberry-pi {
+  color: black; 
+}
+
+
+.listreboot .liststatus .listreset .dropdown-item:hover {
+  
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 1);
+  
+}
+
+#rebootBtn .bx {
+  animation: rotateIcon 2s infinite linear;
+}
+
+@keyframes rotateIcon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.img-shadow {
+  filter: drop-shadow(0 12px 10px  rgba(0, 0, 0, 0.9));
+  border-radius: 50px; 
+}
+
+.img-3d {
+  display: inline-block; /* Ensure proper rendering for transformation */
+  perspective: 1000px; /* Creates a 3D perspective effect */
+  transform: rotateY(10deg) rotateX(10deg); /* Tilts the image for a 3D angle */
+  
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effects */
+}
+
+.img-3d:hover {
+  transform: rotateY(0deg) rotateX(0deg) scale(1.5); /* Changes angle and scales slightly on hover */
+  
+}
+
+
+{% comment %} #defaultBtn .mdi {
+  animation: rotateIcon 2s infinite linear;
+} {% endcomment %}
+
+{% comment %} @keyframes rotateIcon2 {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+} {% endcomment %}
+
+</style>
+
+<script>
+  {% comment %} document.getElementById('rebootBtn').addEventListener('click', function () {
+    
+        alert(`Rebooting... `);
+    
+  }); {% endcomment %}
+
+
+  document.getElementById('statusBtn').addEventListener('click', function () {
+    
+    if ('{{rasp_active_status}}') {
+      alert('Your controller {{rasp_id_by_user}} is Active');
+    } else {
+      alert('Your controller {{rasp_id_by_user}} is Deactive');
+    }
+    
+    location.reload();
+});
+
+</script>
+    
+    <br />
+    <!--FAN DIV-->
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow">
+        <div class="card border shadow h-100">
+          <div class="card-body card-hover rounded">
+            <div
+              class="card-title d-flex align-items-start justify-content-center mb-4"
+            >
+              <div class="avatar flex-shrink-0">
+                <img
+                  src="{% static 'assets/img/icons/unicons/fan.png' %}"
+                  alt="chart success"
+                  class="rounded img-shadow"
+                  
+                />
+              </div>
+            </div>
+            <div class="temperature-container text-center">
+              <p class="mb-2"><strong>FAN</strong></p>
+              {% comment %} <h4 class="card-title mb-3" id="FanStaus">
+                {% if heatpump_devices_dict.fan  %}
+                <button
+                  type="button"
+                  class="btn rounded-pill btn-icon btn-success"
+                >
+                ON
+                </button>
+
+                {% else %}
+                <button
+                  type="button"
+                  class="btn rounded-pill btn-icon btn-danger"
+                >
+                OFF
+                </button>{% endif %}
+
+              </h4> {% endcomment %}
+              <h4 class="card-title mb-3">
+                <span id="FanStatus">
+                    <button type="button" class="btn rounded-pill btn-icon btn-danger">OFF</button>
+                </span>
+            </h4>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- PUMP DIV -->
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow">
+        <div class="card border shadow h-100 ">
+          <div class="card-body card-hover rounded">
+            <div
+              class="card-title d-flex align-items-start justify-content-center mb-4"
+            >
+              <div class="avatar flex-shrink-0">
+                <img
+                  src="{% static 'assets/img/icons/unicons/pump.png' %}"
+                  alt="chart success"
+                  class="rounded img-shadow img-3d" 
+                />
+              </div>
+            </div>
+            <div class="temperature-container text-center">
+            <p class="mb-2"><strong>PUMP</strong></p>
+	          {% comment %} <h4 class="card-title mb-3" id="PumpStatus">
+              {% if heatpump_devices_dict.pump  %}
+                <button
+                  type="button"
+                  class="btn rounded-pill btn-icon btn-success"
+                >
+                ON
+                </button>
+
+                {% else %}
+                <button
+                  type="button"
+                  class="btn rounded-pill btn-icon btn-danger"
+                >
+                OFF
+                </button>{% endif %} {% endcomment %}
+                <h4 class="card-title mb-3">
+                  <span id="PumpStatus">
+                      <button type="button" class="btn rounded-pill btn-icon btn-danger">OFF</button>
+                  </span>
+              
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- COMPRESSOR DIV -->
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow ">
+        <div class="card border shadow h-100 card-hover">
+          <div class="card-body card-hover rounded">
+            <div
+              class="card-title d-flex align-items-center justify-content-center mb-4"
+            >
+              <div class="avatar flex-shrink-0">
+                <img
+                  src="{% static 'assets/img/icons/unicons/compressor.png' %}"
+                  alt="chart success"
+                  class="rounded img-shadow"
+                />
+              </div>
+            </div>
+            <div class="temperature-container text-center">
+              <p class="mb-2"><strong>COMPRESSOR</strong></p>
+              {% comment %} <h4 class="card-title mb-3" id="CompressorStatus">
+                {% if heatpump_devices_dict.compressor  %}
+                <button
+                  type="button"
+                  class="btn rounded-pill btn-icon btn-success"
+                >
+                ON
+                </button>
+
+                {% else %}
+                <button
+                  type="button"
+                  class="btn rounded-pill btn-icon btn-danger"
+                >
+                OFF
+                </button>{% endif %}
+              </h4> {% endcomment %}
+              <h4 class="card-title mb-3">
+                <span id="CompressorStatus">
+                    <button type="button" class="btn rounded-pill btn-icon btn-danger">OFF</button>
+                </span>
+            </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- HEATER DIV -->
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow">
+        <div class= "card border shadow h-100">
+          <div class="card-body card-hover rounded">
+            <div
+              class="card-title d-flex align-items-center justify-content-center mb-4"
+            >
+              <div class="avatar flex-shrink-0">
+                <img
+                  src="{% static 'assets/img/icons/unicons/heater.png' %}"
+                  alt="chart success"
+                  class="rounded img-shadow"
+                />
+              </div>
+            </div>
+            <div class="temperature-container text-center">
+              <p class="mb-2"><strong>HEATER</strong></p>
+              {% comment %} <h4 class="card-title mb-3" id="HeaterStatus">
+
+              {% if heatpump_devices_dict.heater  %}
+                <button
+                  type="button"
+                  class="btn rounded-pill btn-icon btn-success"
+                >
+                ON
+                </button>
+
+                {% else %}
+                <button
+                  type="button"
+                  class="btn rounded-pill btn-icon btn-danger"
+                >
+                OFF
+                </button>{% endif %}
+              </h4> {% endcomment %}
+              <h4 class="card-title mb-3">
+                <span id="HeaterStatus">
+                    <button type="button" class="btn rounded-pill btn-icon btn-danger">OFF</button>
+                </span>
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--/ DEVICES DIV ENDS HERE /-->
+<!-- SENSORS DATA STARTS HERE -->
+<div class="container-sm container-p-y">
+  <h2 class="text-center fw-bold mb-3" style="color: #333; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+    Sensors
+  </h2> 
+  
+  <tr>
+  <br />
+  <div class="row g-6">
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow">
+        <div class="card border h-100 card-hover">
+          <div class="card-body">
+            <div
+              class="card-title d-flex position-center align-items-center mb-3"
+            >
+              <div
+                class="avatar mx-auto position-absolute start-50 translate-middle-x"
+              >
+                <img
+                  src="{% static 'assets/img/icons/unicons/temprature.png' %}"
+                  alt="chart success"
+                  class="rounded img-shadow"
+                />
+              </div>
+              <!--EDIT BUTTON-->
+              <div class="ms-auto">
+              
+              <a href='{% url "edit_temprature" user_id %}' class="btn p-0 btn-primary box-shape btn-icon" style="margin-left: 5px; width: 25px; height: 25px; text-align: center;">
+                <span class="d-sm-block">
+                  <i class="mdi mdi-circle-edit-outline" style="font-size: 1rem"></i>
+                </span>
+              </a>
+              </div><!-- /EDIT BUTTON ENDS HERE/-->
+            </div>
+            <br />
+            <!-- Temperature Container -->
+            <div
+              class="temperature-container d-flex align-items-center justify-content-center text-center"
+            >
+              <p class="mb-2"><strong>TEMPERATURE&nbsp;</strong></p>
+            </div>
+            <div
+              class="temperature-container d-flex align-items-center justify-content-center text-center"
+            >
+              <p class="mb-2"><strong>SET:&nbsp;</strong></p>
+              <p class="mb-2" id="SettempValue"><strong>{{heatpump_sensors_current_status_dict.temperature}}°C</strong></p>
+            </div>
+            <div
+              class="temperature-container d-flex align-items-center justify-content-center text-center"
+            >
+            
+  
+            <p class="mb-2"><strong>CURRENT:&nbsp;</strong></p>
+            <p class="mb-2"><strong><span id = "tempValue"></span>°C</strong></p>
+
+            {% comment %} <p class="mb-2"><strong><span>{{ heatpump_sensors_dict.temperature}}</span>°C</strong></p> {% endcomment %}
+            
+
+            </div>
+            <!--/TEMPERATURE CONTAINER ENDS HERE/-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOLTAGE CARD-->
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow">
+        <div class="card border h-100 card-hover">
+          <div class="card-body">
+            <div class="card-title d-flex align-items-start justify-content-center align-items-stretch mb-8">
+              <div
+                class="avatar mx-auto position-absolute start-50 translate-middle-x"
+              >
+                <img
+                  src="{% static 'assets/img/icons/unicons/voltage.png' %}"
+                  alt="chart success"
+                  class="rounded img-shadow"
+                />
+              </div>
+              <div class="ms-auto">
+              
+                <a href='{% url "edit_voltage" user_id %}' class="btn p-0 btn-primary box-shape btn-icon" style="margin-left: 5px; width: 25px; height: 25px; text-align: center;">
+                  <span class="d-sm-block">
+                    <i class="mdi mdi-circle-edit-outline" style="font-size: 1rem"></i>
+                  </span>
+                </a>
+                </div>
+              
+            </div>
+            <div class="voltage-container text-center">
+              
+              <p class="mb-2"><strong>VOLTAGE</strong></p>
+              <div class="voltage-container d-flex align-items-center justify-content-center text-center">
+              <p class="mb-2"><strong>SET:&nbsp;</strong></p>
+              <p class="mb-2" id="SetVoltValue"><strong>{{heatpump_sensors_current_status_dict.voltage}} V</strong></p>
+
+            </div>
+            <div class="voltage-container d-flex align-items-center justify-content-center text-center">
+              <p class="mb-2"><strong>CURRENT:&nbsp;</strong></p>
+              {% comment %} <p class="mb-2" id="VoltValue"><strong>{{heatpump_sensors_dict.voltage}} V</strong></p> {% endcomment %}
+              <p class="mb-2"><strong><span id = "VoltValue"></span> V</strong></p>
+            </div>
+              
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- WATT CARD -->
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow">
+        <div class="card border h-100 card-hover">
+          <div class="card-body">
+            <div class="card-title d-flex align-items-start justify-content-center align-items-stretch mb-8">
+              <div
+                class="avatar mx-auto position-absolute start-50 translate-middle-x"
+              >
+                <img
+                  src="{% static 'assets/img/icons/unicons/watt.png' %}"
+                  alt="chart success"
+                  class="rounded img-3d"
+                />
+              </div>
+              <div class="ms-auto">
+              
+                <a href='{% url "edit_watt" user_id %}' class="btn p-0 btn-primary box-shape btn-icon" style="margin-left: 5px; width: 25px; height: 25px; text-align: center;">
+                  <span class="d-sm-block">
+                    <i class="mdi mdi-circle-edit-outline" style="font-size: 1rem"></i>
+                  </span>
+                </a>
+                </div>
+              
+            </div>
+            <div class="watt-container text-center">
+              
+              <p class="mb-2"><strong>AMPERE</strong></p>
+              <div class="watt-container d-flex align-items-center justify-content-center text-center">
+              <p class="mb-2"><strong>SET:&nbsp;</strong></p>
+              <p class="mb-2" id="WattValue"><strong>{{heatpump_sensors_current_status_dict.watt}} Amp</strong></p>
+
+            </div>
+            <div class="watt-container d-flex align-items-center justify-content-center text-center">
+              <p class="mb-2"><strong>CURRENT:&nbsp;</strong></p>
+              <p class="mb-2" id="WattValue"><strong>{{heatpump_sensors_dict.watt}} Amp</strong></p>
+            </div>
+              
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- HIGH PRESSURE CARD -->
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow">
+        <div class="card border h-100 card-hover">
+          <div class="card-body">
+            <div class="card-title d-flex align-items-start justify-content-center align-items-stretch mb-8" style="height:45px";>
+              <div class="avatar flex-shrink-0">
+                <img
+                  src="{% static 'assets/img/icons/unicons/high-pressure.png' %}"
+                  alt="chart success"
+                  class="rounded img-shadow"
+                />
+              </div>
+            </div>
+
+
+
+            <div class="temperature-container text-center">
+              <p class="mb-2"><strong>HIGH PRESSURE</strong></p>
+              {% if heatpump_devices_dict.low_pressure  %}
+                <button
+                  type="button"
+                  class="btn box-shape btn-icon-1 btn-success"
+                >
+                True
+                </button>
+
+                {% else %}
+                <button
+                  type="button"
+                  class="btn box-shape btn-icon-1 btn-danger"
+                >
+                False
+                </button>{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--LOW PRESSURE CARD-->
+    <div class="col-md-4 col-lg-3">
+      <div class="shadow">
+        <div class="card border h-100 card-hover">
+          <div class="card-body">
+            <div
+              class="card-title d-flex align-items-start justify-content-center align-items-stretch mb-6"
+              style="height: 50px;"
+            >
+              <div class="avatar flex-shrink-0">
+                <img
+                  src="{% static 'assets/img/icons/unicons/low-pressure.png' %}"
+                  alt="chart success"
+                  class="rounded img-shadow"
+                />
+              </div>
+            </div>
+            <div class="temperature-container text-center">
+              <p class="mb-2"><strong>LOW PRESSURE</strong></p>
+              {% comment %} <h4 class="card-title mb-3" id="tempValue">{{heatpump_sensors_dict.low_pressure}}</h4> {% endcomment %}
+              {% if heatpump_devices_dict.low_pressure  %}
+                <button
+                  type="button"
+                  class="btn box-shape btn-icon-1 btn-success"
+                >
+                True
+                </button>
+
+                {% else %}
+                <button
+                  type="button"
+                  class="btn box-shape btn-icon-1 btn-danger"
+                >
+                False
+                </button>{% endif %}
+            </div>
+          </div>
+        </div>  
+      </div>
+    </div>
+    
+
+    <!--BYPASS CARD-->
+    <div class="col-md-4 col-lg-3 ">
+      
+        <div class="card border h-100 card-hover" >
+          <div class="card-body ">
+            
+            
+            <div class="card-title d-flex align-items-center justify-content-between mb-4 ">
+              <!-- Image -->
+              <div class="avatar">
+                <img
+                  src="{% static 'assets/img/icons/unicons/By_pass.gif' %}"
+                  alt="chart success"
+                  class="rounded img-shadow"
+                  style="width: 40px; height: 40px;"
+                />
+              </div>
+              
+              
+              <div class="ms-3">
+                <p class="mb-auto" style="font-size: 18px;"><strong>BY PASS</strong></p>
+              </div>
+              
+              
+              <div class="ms-3">
+                <a href='{% url "bypass_sensors" user_id %}' class="btn p-0 btn-primary box-shape btn-icon" style="margin-left: 5px; width: 25px; height: 25px; text-align: center;">
+                  <span class="d-sm-block">
+                    <i class="mdi mdi-circle-edit-outline" style="font-size: 1rem"></i>
+                  </span>
+                </a>
+              </div>
+              
+            </div>
+            
+            
+            {% for sensor in bypass_sensors %}
+            
+              {% if sensor.sensor != 'temperature' %}
+              
+                <div class="watt-container text-center">
+                  <div class="checkbox-list text-start ms-12 mb-auto">
+                    <div class="form-check mb-auto">
+                      <label 
+                        class="form-check-label {% if sensor.bypass_status %}text-danger{% endif %}" 
+                        style="font-size:15px;">
+                        <input 
+                          class="form-check-input {% if sensor.bypass_status %}border-danger{% endif %}"
+                          type="checkbox" 
+                          name = {{sensor.sensor}}
+                          value="1" 
+                          {% if sensor.bypass_status %}checked style="background-color:red;" disabled {% else %} disabled {% endif %}>
+                            {% if sensor.sensor == 'high_pressure' %}
+                              <strong>High Pressure</strong>
+                            {% elif sensor.sensor == 'low_pressure' %}
+                              <strong>Low Pressure</strong>
+                            {% elif sensor.sensor == 'watt' %}
+                              <strong>Ampere</strong>
+                            {% else %}
+                              <strong>{{ sensor.sensor|title }}</strong>
+                            {% endif %}
+                          
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End BYPASS-->
+
+
+
+<!-- /SENSOR DATA ENDS HERE/-->
+
+
+<!-- MARK AS READ-->
+
+{% comment %} 
+
+<div class="container mt-5">
+  <div class="table-responsive text-nowrap shadow-lg rounded">
+    <h2 class="text-center fw-bold mb-4" style="color: #333; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+      Status of {{ rasp_id_by_user }}
+    </h2>
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark circle">
+        <tr>
+          <th><strong>ALERT TYPE</strong></th>
+          <th><strong>DESCRIPTION</strong></th>
+          <th><strong>ACTIONS</strong></th>
+          <th><strong>MARK AS READ</strong></th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge bg-danger text-uppercase">Error</span></td>
+          <td>LOW PRESSURE ERROR</td>
+          <td><button class="btn btn-warning btn-sm">Check Sensor</button></td>
+          <td>
+            <input type="checkbox" class="form-check-input">
+          </td>
+        </tr>
+        <tr>
+          <td><span class="badge bg-warning text-uppercase ">warning</span></td>
+          <td>HIGH PRESSURE ERROR</td>
+          <td><button class="btn btn-warning btn-sm">Check Sensor</button></td>
+          <td>
+            <input type="checkbox" class="form-check-input">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div> check 1 {% endcomment %}
+  
+
+
+{% comment %} 
+<div class="container mt-5">
+  <div class="shadow">
+    <div class="table-responsive text-nowrap shadow-lg rounded">
+      <h2 class="text-center fw-bold mb-4" style="text-color: #fff; text-shadow: 2px 2px 5px rgba(0, 0, 0, .3);">
+        Status of {{ rasp_id_by_user }}
+      </h2>
+      <table class="table align-middle rounded">
+        <thead style="background: rgb(49, 48, 48);">
+          <tr>
+            <th style="color: white; font-weight: bold;">ALERT TYPE <i class="bi bi-bell"></i></th>
+            <th style="color: white; font-weight: bold;">DESCRIPTION <i class="bi bi-info-circle"></i></th>
+            <th style="color: white; font-weight: bold;">ACTIONS <i class="bi bi-tools"></i></th>
+            <th style="color: white; font-weight: bold;">MARK AS READ <i class="bi bi-check2-circle"></i></th>
+          </tr>
+        </thead>
+
+        <tbody style="max-height: 400px; overflow-y: auto;">
+          
+          <tr class="hover-row">
+            <td><span class="badge badge-pill bg-danger text-uppercase"><i class="bi bi-x-circle"> Error</i></span></td>
+            <td>LOW PRESSURE ERROR</td>
+            <td>
+              <div class="alert alert-danger p-3 d-flex justify-content-center align-items-center" role="alert">
+                <div class="text-center">
+                  <p>There is a problem with the low-pressure sensor</p>
+                  <button class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Check the low-pressure sensor">
+                    <i class="bi bi-exclamation-triangle"></i> Check Sensor
+                  </button>
+                </div>
+              </div>
+            </td>
+            <td class="d-flex justify-content-center">
+              <input type="checkbox" class="form-check-input">
+            </td>
+          </tr>
+
+          
+          <tr class="hover-row">
+            <td><span class="badge bg-warning text-uppercase text-dark"><i class="bi bi-exclamation-triangle"> </i>Warning</span></td>
+            <td>HIGH PRESSURE WARNING</td>
+            <td>
+              <button class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Monitor temperature sensor">
+                <i class="bi bi-thermometer-half"></i> High pressure sensor
+              </button>
+            </td>
+            <td class="d-flex justify-content-center">
+              <input type="checkbox" class="form-check-input">
+            </td>
+          </tr>
+
+          
+          <tr class="hover-row">
+            <td><span class="badge bg-danger text-uppercase">Error</span></td>
+            <td>HIGH PRESSURE ERROR</td>
+            <td>
+              <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Check the high-pressure sensor">
+                <i class="bi bi-exclamation-triangle"></i> Check Sensor
+              </button>
+            </td>
+            <td class="d-flex justify-content-center">
+              <input type="checkbox" class="form-check-input">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Add hover effect for the table rows */
+  .hover-row:hover {
+    background-color:rgba(90, 90, 90, 0.23); /* Light background color on hover */
+    cursor: pointer; /* Change cursor to indicate hoverable */
+  }
+</style> CHECK 2 {% endcomment %}
+  
+
+<div class="container mt-5">
+  <div class="shadow">
+    <div class="table-responsive text-nowrap shadow-lg rounded">
+      <h2 class="text-center fw-bold mb-4" style="text-color: #fff; text-shadow: 2px 2px 5px rgba(0, 0, 0, .3);">
+        Status of {{ rasp_id_by_user }}
+      </h2>
+      <table class="table align-middle rounded background-black">
+        <thead style="background: rgb(49, 48, 48);">
+          <tr>
+            
+            <th style="color: white; font-weight: bold; text-align: center; font-size: 14px;"><strong>ALERT TYPE</strong> <i class="bi bi-bell-fill" style="font-size: 20px; color: #FF5733;"></i></th>
+            <th style="color: white; font-weight: bold; font-size: 14px;">DESCRIPTION <i class="bi bi-info-circle-fill" style="font-size: 20px; color:rgba(226, 227, 233, 0.93);"></i></th>
+            <th style="color: white; font-weight: bold; text-align: center; font-size: 14px;">ACTIONS <i class="bi bi-tools" style="font-size: 20px; color:  rgba(226, 188, 18, 0.81);"></i></th>
+            <th style="color: white; font-weight: bold; text-align: center;font-size: 14px;">DATE & TIME <i class="bi bi-clock" style="font-size: 20px; color:lightpurple;"></i></th>
+            <th style="color: white; font-weight: bold; text-align: center;font-size: 14px;">MARK AS READ <i class="bi bi-check2-circle" style="font-size: 20px; color:lightgreen;"></i></th>
+          </tr>
+        </thead>
+        
+        <tbody style="max-height: 400px; overflow-y: auto;">
+          {% for errors in heatpump_sensors_errors_obj %}
+          
+            {% if errors.error_type == 'error' %}
+            <tr class="hover-row">
+            
+              <td><span class="badge badge-pill bg-danger text-uppercase "><i class="bi bi-x-circle-fill"> Error</i></span></td>
+              <td class='text-uppercase'><strong>{{errors.error}}</strong></td>
+              <td class="text-center">
+                <div class="alert alert-danger p-3 d-flex justify-content-center align-items-center" role="alert">
+                  <div class="text-center">
+                    <p>There is a problem with the low-pressure sensor</p>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Check the low-pressure sensor">
+                      <i class="bi bi-exclamation-triangle"></i> Check Sensor
+                    </button>
+                  </div>
+                </div>
+              </td>
+              <td class='text-uppercase'><strong>{{errors.created_at}}</strong></td>
+              <td class="text-center">
+                
+                <div class="container mt-5 text-center">
+                  <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+  
+                    <span class="btn-content">
+                      
+                      <span><strong>Mark</strong></span>
+  
+                    </span>
+                  </button>
+                </div>
+          
+              </td>
+            </tr>
+            {% elif errors.error_type == 'warning' %}
+            <tr class="hover-row">
+              <td><span class="badge bg-warning text-uppercase text-dark"><i class="bi bi-exclamation-triangle-fill"> </i>Warning</span></td>
+              <td class ='text-uppercase'><strong>{{errors.error}}</strong></td>
+              <td class="text-center">
+                <button class="btn btn-warning btn-sm color:black" data-bs-toggle="tooltip" data-bs-placement="top" title="Monitor temperature sensor">
+                  <i class="bi bi-thermometer-half 16px"></i> High pressure sensor
+                </button>
+              </td>
+              <td class ='text-uppercase'><strong>{{errors.created_at}}</strong></td>
+              <td class="text-center">
+                
+                <div class="container mt-5 text-center">
+                  <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+  
+                    <span class="btn-content">
+                      
+                      <span><strong>Mark</strong></span>
+  
+                    </span>
+                  </button>
+                </div>
+              
+                
+              </td>
+            </tr>
+            {% elif errors.error_type == 'info' %}
+            <tr class="hover-row">
+              <td><span class="badge bg-info text-uppercase text-dark"><i class="bi bi-exclamation-triangle-fill"> </i>MAINTENANCE</span></td>
+              <td class='text-uppercase'><strong>{{errors.error}}</strong></td>
+              <td class="text-center">
+                <button class="btn btn-info btn-sm text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Monitor temperature sensor">
+                  <i class="bi bi-thermometer-half"></i> <strong>Schedule Engineer </strong> 
+                </button>
+              </td>
+              <td class='text-uppercase'><strong>{{errors.created_at}}</strong></td>
+              <td class="text-center">
+                
+                <div class="container mt-5 text-center">
+                  <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+  
+                    <span class="btn-content">
+                      
+                      <span><strong>Mark</strong></span>
+  
+                    </span>
+                  </button>
+                </div>
+              
+                
+              </td>
+            </tr>
+            {% elif errors.error_type == 'success' %}
+            <tr class="hover-row">
+              <td><span class="badge bg-success text-uppercase text-dark"><i class="bi bi-star-fill"></i> success</span></td>
+              <td class='text-uppercase'><strong>{{errors.error}}</strong></td>
+              <td class="text-center">
+                <button class="btn btn-success btn-sm text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="COMPRESSOR WORKING FINE">
+                  <i class="bi bi-shield-check"></i> <strong>UP-TO DATE</strong>
+                </button>
+              </td>
+              <td class='text-uppercase'><strong>{{errors.created_at}}</strong></td>
+              <td class="text-center">
+                
+                <div class="container mt-5 text-center">
+                  <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+  
+                    <span class="btn-content">
+                      
+                      <span><strong>Mark</strong></span>
+  
+                    </span>
+                  </button>
+                </div>
+              
+                
+              </td>
+            </tr>
+
+            {% endif %}
+          
+          {% endfor %}
+          
+          
+          {% comment %} <tr class="hover-row">
+            <td><span class="badge bg-warning text-uppercase text-dark"><i class="bi bi-exclamation-triangle-fill"> </i>Warning</span></td>
+            <td><strong>HIGH PRESSURE WARNING</strong></td>
+            <td class="text-center">
+              <button class="btn btn-warning btn-sm color:black" data-bs-toggle="tooltip" data-bs-placement="top" title="Monitor temperature sensor">
+                <i class="bi bi-thermometer-half 16px"></i> High pressure sensor
+              </button>
+            </td>
+            <td class="text-center">
+              
+              <div class="container mt-5 text-center">
+                <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+
+                  <span class="btn-content">
+                    
+                    <span><strong>Mark</strong></span>
+
+                  </span>
+                </button>
+              </div>
+            
+              
+            </td>
+          </tr>
+
+
+          <tr class="hover-row">
+            <td><span class="badge bg-danger text-uppercase">Error</span></td>
+            <td>HIGH PRESSURE ERROR</td>
+            <td class="text-center">
+              <button class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Check the high-pressure sensor">
+                <i class="bi bi-exclamation-triangle"></i> Check Sensor
+              </button>
+            </td>
+            <td class="text-center">
+              
+              <div class="container mt-5 text-center">
+                <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+
+                  <span class="btn-content">
+                    
+                    <span><strong>Mark</strong></span>
+
+                  </span>
+                </button>
+              </div>
+            
+              
+            </td>
+          </tr>
+
+          
+          <tr class="hover-row">
+            <td><span class="badge bg-info text-uppercase text-dark"><i class="bi bi-exclamation-triangle-fill"> </i>MAINTENANCE</span></td>
+            <td><strong>FAN MAINTENANCE REQUIRED</strong></td>
+            <td class="text-center">
+              <button class="btn btn-info btn-sm text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Monitor temperature sensor">
+                <i class="bi bi-thermometer-half"></i> <strong>Schedule Engineer </strong> 
+              </button>
+            </td>
+            <td class="text-center">
+              
+              <div class="container mt-5 text-center">
+                <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+
+                  <span class="btn-content">
+                    
+                    <span><strong>Mark</strong></span>
+
+                  </span>
+                </button>
+              </div>
+            
+              
+            </td>
+          </tr>
+
+
+          <tr class="hover-row">
+            <td><span class="badge bg-success text-uppercase text-dark"><i class="bi bi-star-fill"></i> success</span></td>
+            <td>COMPRESSOR WORKING FINE</td>
+            <td class="text-center">
+              <button class="btn btn-success btn-sm text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="COMPRESSOR WORKING FINE">
+                <i class="bi bi-shield-check"></i> <strong>UP-TO DATE</strong>
+              </button>
+            </td>
+            <td class="text-center">
+              
+              <div class="container mt-5 text-center">
+                <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+
+                  <span class="btn-content">
+                    
+                    <span><strong>Mark</strong></span>
+
+                  </span>
+                </button>
+              </div>
+            
+              
+            </td>
+          </tr>
+
+
+          <tr class="hover-row">
+            <td><span class="badge bg-warning text-uppercase text-dark"><i class="bi bi-exclamation-triangle"> </i>Warning</span></td>
+            <td><strong>HIGH PRESSURE WARNING</strong></td>
+            <td class="text-center">
+              <button class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Monitor temperature sensor">
+                <i class="bi bi-thermometer-half"></i> High pressure sensor
+              </button>
+            </td>
+            <td class="text-center">
+              
+              <div class="container mt-5 text-center">
+                <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+
+                  <span class="btn-content">
+                    
+                    <span><strong>Mark</strong></span>
+
+                  </span>
+                </button>
+              </div>
+            
+              
+            </td>
+          </tr>
+
+
+          <tr class="hover-row">
+            <td><span class="badge bg-danger text-uppercase"><i class="bi bi-x-circle-fill"> </span></td>
+            <td>HIGH PRESSURE ERROR</td>
+            <td class="text-center">
+              <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Check the high-pressure sensor">
+                <i class="bi bi-exclamation-triangle"></i> Check Sensor
+              </button>
+            </td>
+            <td class="text-center">
+              
+              <div class="container mt-5 text-center">
+                <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+
+                  <span class="btn-content">
+                    
+                    <span><strong>Mark</strong></span>
+
+                  </span>
+                </button>
+              </div>
+            
+              
+            </td>
+          </tr>
+
+          <tr class="hover-row">
+            <td><span class="badge bg-danger text-uppercase">Error</span></td>
+            <td>HIGH PRESSURE ERROR</td>
+            <td class="text-center">
+              <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Check the high-pressure sensor">
+                <i class="bi bi-exclamation-triangle"></i> Check Sensor
+              </button>
+            </td>
+            <td class="text-center">
+              
+              <div class="container mt-5 text-center">
+                <button id="toggleReadBtn" type="button"  class="toggleReadBtn btn btn-outline-success btn-animate" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark/Unmark" >
+                  <span class="btn-content">
+                    
+                    <span><strong>Mark</strong></span>
+
+                  </span>
+                </button>
+              </div>
+            
+              
+            </td>
+          </tr> {% endcomment %}
+        </tbody>
+      
+      </table>
+    </div>
+  </div>
+</div> 
+
+
+
+
+<script>
+  var userId = "{{ user_id }}"; 
+
+  $(document).ready(function () {
+    setInterval(function () {
+        $.ajax({
+            type: 'GET',
+            url: `/live-data/${userId}/`,
+            success: function (response) {
+                console.log(response);
+                
+                
+                // live device status
+                /*if (response.live_device_data.length > 0) {
+                  let fanStatus = response.live_device_data[0].status;
+                  let PumpStatus = response.live_device_data[1].status;
+                  let CompressorStatus = response.live_device_data[2].status;
+                  let HeaterStatus = response.live_device_data[3].status;
+                  
+                  //console.log("Fan Status:", fanStatus); 
+                  //console.log("Pump Status:", PumpStatus); 
+                  //console.log("COMPRESSOR Status:", CompressorStatus); 
+                  //console.log("Heater Status:", HeaterStatus); 
+                  
+                  if (fanStatus === true) {
+                    $("#FanStatus").html('<button type="button" class="btn rounded-pill btn-icon btn-success">ON</button>');
+                  } 
+                  else {
+                    $("#FanStatus").html('<button type="button" class="btn rounded-pill btn-icon btn-danger">OFF</button>');
+                  }
+                  
+                  if (PumpStatus === true) {
+                    $("#PumpStatus").html('<button type="button" class="btn rounded-pill btn-icon btn-success">ON</button>');
+                  } 
+                  else {
+                    $("#PumpStatus").html('<button type="button" class="btn rounded-pill btn-icon btn-danger">OFF</button>');
+                  }
+                  if (CompressorStatus === true) {
+                    $("#CompressorStatus").html('<button type="button" class="btn rounded-pill btn-icon btn-success">ON</button>');
+                  } 
+                  else {
+                    $("#CompressorStatus").html('<button type="button" class="btn rounded-pill btn-icon btn-danger">OFF</button>');
+                  }
+                  if (HeaterStatus === true) {
+                    $("#HeaterStatus").html('<button type="button" class="btn rounded-pill btn-icon btn-success">ON</button>');
+                  } 
+                  //else {
+                  //  $("#HeaterStatus").html('<button type="button" class="btn rounded-pill btn-icon btn-danger">OFF</button>');
+                  } */
+
+                response.live_device_data.forEach(device => {
+                  let buttonClass = device.status ? "btn-success" : "btn-danger";
+                  let buttonText = device.status ? "ON" : "OFF";
+                    
+                  if (device.device === "fan") {
+                      $("#FanStatus").html(`<button class="btn rounded-pill btn-icon ${buttonClass}">${buttonText}</button>`);
+                  } else if (device.device === "pump") {
+                      $("#PumpStatus").html(`<button class="btn rounded-pill btn-icon ${buttonClass}">${buttonText}</button>`);
+                  } else if (device.device === "compressor") {
+                      $("#CompressorStatus").html(`<button class="btn rounded-pill btn-icon ${buttonClass}">${buttonText}</button>`);
+                  } else if (device.device === "heater") {
+                      $("#HeaterStatus").html(`<button class="btn rounded-pill btn-icon ${buttonClass}">${buttonText}</button>`);
+                  }
+                });
+
+
+                // live sensor status
+                $("#tempValue").empty();
+                $("#VoltValue").empty();
+              
+                response.live_sensor_data.forEach(sensor => {
+                  if (sensor.sensor === "temperature") {
+                    temperature = sensor.current_value;
+                } 
+                else if (sensor.sensor === "voltage") {  
+                    voltage = sensor.current_value;
+                }
+              });
+
+
+
+              $("#tempValue").text(temperature);
+              $("#VoltValue").text(voltage);
+
+            },
+
+            
+        });
+    }, 1000);
+  });
+</script>
+
+
+
+<!-- Mark as read/unread -->
+<script>
+  document.querySelectorAll('.toggleReadBtn').forEach((btn) => {
+    let isRead = false; 
+
+    function makeButtonRoundAndSmall(button) {
+      button.style.width = '35px';  
+      button.style.height = '35px'; 
+      button.style.borderRadius = '50%'; 
+      button.style.padding = '0'; 
+      button.style.fontSize = '24px'; 
+      button.style.transition = 'all 0.3s ease'; 
+    }
+
+    btn.addEventListener('click', () => {
+      btn.classList.add('clicked');
+      makeButtonRoundAndSmall(btn);
+
+      setTimeout(() => {
+        const content = btn.querySelector('.btn-content');
+
+        if (isRead) {
+          
+          content.innerHTML = `
+            <div class="icon-container rotate icon-rotate" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Marked as unread">
+              <i class="bi bi-x-circle-fill"></i>
+              
+            </div>
+          `;
+          btn.classList.remove('btn-outline-success', 'success');
+          btn.classList.add('btn-outline-danger', 'unread');
+          btn.setAttribute('title', 'Marked as unread');
+        } else {
+          
+          content.innerHTML = `
+            <div class="icon-container rotate icon-rotate" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Marked as Read" >
+              <i class="bi bi-check-circle-fill"></i>
+
+            </div>
+          `;
+          btn.classList.remove('btn-outline-danger', 'unread');
+          btn.classList.add('btn-outline-success', 'success');
+          btn.setAttribute('title', 'Marked as Read');
+        }
+        isRead = !isRead;
+        btn.classList.remove('clicked'); 
+      }, 200); 
+    });
+  });
+</script> 
+
+<!-- MARK AS READ/UNREAD--> 
+
+
+{% endblock content %}
+<!-- / Content -->
